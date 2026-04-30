@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Sprout, Phone, Briefcase, ShieldCheck } from "lucide-react";
+import { Sprout, Phone, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -131,12 +131,9 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        <div className="mt-6 flex flex-col items-center gap-2 text-primary-foreground">
-          <Link to="/officer/login" className="inline-flex items-center gap-2 text-sm underline-offset-4 hover:underline">
-            <Briefcase className="h-4 w-4" /> Officer login
-          </Link>
-          <Link to="/officer/signup" className="inline-flex items-center gap-2 text-xs opacity-90 hover:underline">
-            <ShieldCheck className="h-3.5 w-3.5" /> Create officer account
+        <div className="mt-6 text-primary-foreground">
+          <Link to="/" className="inline-flex items-center gap-2 text-sm underline-offset-4 hover:underline">
+            <ArrowLeft className="h-4 w-4" /> Back to role selection
           </Link>
         </div>
       </div>
