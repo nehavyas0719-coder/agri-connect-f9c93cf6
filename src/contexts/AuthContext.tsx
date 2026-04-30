@@ -28,26 +28,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [role, setRole] = useState<Role>(null);
   const [loading, setLoading] = useState(true);
 
+  const resolveRole = async (u: User): Promise<Role> => {
+    // Retry a couple times in case the user doc was just written by signup
+    for (let i = 0; i < 4; i++) {
+      const snap = await getDoc(doc(db, "users", u.uid));
+      if (snap.exists()) {
+        const r = (snap.data().role as Role) ?? null;
+        if (r) return r;
+      }
+      // If phone user without doc yet, create as farmer
+      if (u.phoneNumber) {
+        await setDoc(doc(db, "users", u.uid), {
+          role: "farmer",
+          createdAt: new Date().toISOString(),
+          phone: u.phoneNumber,
+          email: u.email ?? null,
+        });
+        return "farmer";
+      }
+      // email user with no doc yet — wait briefly for signup writer
+      await new Promise((r) => setTimeout(r, 250));
+    }
+    return null;
+  };
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u);
       if (u) {
-        const snap = await getDoc(doc(db, "users", u.uid));
-        if (snap.exists()) {
-          setRole((snap.data().role as Role) ?? null);
-        } else {
-          // Default: phone auth = farmer, no doc yet
-          const defaultRole: Role = u.phoneNumber ? "farmer" : null;
-          if (defaultRole) {
-            await setDoc(doc(db, "users", u.uid), {
-              role: defaultRole,
-              createdAt: new Date().toISOString(),
-              phone: u.phoneNumber ?? null,
-              email: u.email ?? null,
-            });
-          }
-          setRole(defaultRole);
-        }
+        const r = await resolveRole(u);
+        setRole(r);
       } else {
         setRole(null);
       }
