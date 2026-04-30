@@ -5,7 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { RoleGuard } from "@/components/RoleGuard";
-import Index from "./pages/Index.tsx";
+import Landing from "./pages/Landing.tsx";
+import FarmerLogin from "./pages/FarmerLogin.tsx";
 import OfficerLogin from "./pages/OfficerLogin.tsx";
 import OfficerSignup from "./pages/OfficerSignup.tsx";
 import Policies from "./pages/Policies.tsx";
@@ -24,7 +25,8 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/farmer/login" element={<FarmerLogin />} />
             <Route path="/officer/login" element={<OfficerLogin />} />
             <Route path="/officer/signup" element={<OfficerSignup />} />
 
